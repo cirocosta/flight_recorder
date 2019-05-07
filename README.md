@@ -1,6 +1,4 @@
 - [x] # of teams
 - [x] # pipelines
-- [ ] # of resources per pipeline
-- [ ] # of jobs per pipeline
-- [ ] # of builds per pipeline
-  -- per job
+- [x] # of resources per pipeline
+- [x] # of jobs per pipeline
