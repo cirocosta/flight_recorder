@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -11,6 +12,7 @@ import (
 	"github.com/concourse/flag"
 	"github.com/jessevdk/go-flags"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/vito/twentythousandtonnesofcrudeoil"
 )
 
 var (
@@ -33,8 +35,13 @@ func handleSignals(exp *exporter.Exporter, database *db.Db) {
 }
 
 func main() {
-	_, err := flags.Parse(&config)
+	parser := flags.NewParser(&config, flags.HelpFlag|flags.PassDoubleDash)
+	parser.NamespaceDelimiter = "-"
+	twentythousandtonnesofcrudeoil.TheEnvironmentIsPerfectlySafe(parser, "FR_")
+
+	_, err := parser.Parse()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 

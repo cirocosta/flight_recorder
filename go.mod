@@ -21,6 +21,7 @@ require (
 	github.com/prometheus/procfs v0.0.0-20190503130316-740c07785007 // indirect
 	github.com/sirupsen/logrus v1.4.1 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
+	github.com/vito/twentythousandtonnesofcrudeoil v0.0.0-20180305154709-3b21ad808fcb
 	golang.org/x/crypto v0.0.0-20190506204251-e1dfcc566284 // indirect
 	golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c // indirect
 	golang.org/x/sys v0.0.0-20190506115046-ca7f33d4116e // indirect
