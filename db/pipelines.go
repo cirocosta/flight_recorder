@@ -14,7 +14,8 @@ func (d *Db) PipelinesPerTeam() (datapoints []Datapoint, err error) {
 			pipelines
 		INNER JOIN
 			teams ON pipelines.team_id = teams.id
-		GROUP BY team_name
+		GROUP BY 
+			team_name
 	`, 1)
 	if err != nil {
 		err = errors.Wrapf(err,

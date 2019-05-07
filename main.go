@@ -56,6 +56,8 @@ func main() {
 		Collectors: []prometheus.Collector{
 			&collectors.WorkersByState{Db: database},
 			&collectors.PipelinesPerTeam{Db: database},
+			&collectors.Resources{Db: database},
+			&collectors.Teams{Db: database},
 		},
 	}
 
