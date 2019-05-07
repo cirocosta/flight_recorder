@@ -1,6 +1,6 @@
 SRC = $(shell find . -name "*.go")
 
-run: concourse_db_exporter
+run: flight_recorder
 	./$< \
 		--postgres.database=concourse \
 		--postgres.host=127.0.0.1 \
@@ -8,5 +8,5 @@ run: concourse_db_exporter
 		--postgres.user=dev \
 		--postgres.password=dev
 
-concourse_db_exporter: $(SRC)
+flight_recorder: $(SRC)
 	go build -o $@ -v -i .

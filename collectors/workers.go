@@ -1,7 +1,7 @@
 package collectors
 
 import (
-	"github.com/cirocosta/concourse_db_exporter/db"
+	"github.com/cirocosta/flight_recorder/db"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

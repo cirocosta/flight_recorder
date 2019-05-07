@@ -1,4 +1,4 @@
-module github.com/cirocosta/concourse_db_exporter
+module github.com/cirocosta/flight_recorder
 
 go 1.12
 

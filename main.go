@@ -5,9 +5,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/cirocosta/concourse_db_exporter/collectors"
-	"github.com/cirocosta/concourse_db_exporter/db"
-	"github.com/cirocosta/concourse_db_exporter/exporter"
+	"github.com/cirocosta/flight_recorder/collectors"
+	"github.com/cirocosta/flight_recorder/db"
+	"github.com/cirocosta/flight_recorder/exporter"
 	"github.com/concourse/flag"
 	"github.com/jessevdk/go-flags"
 	"github.com/prometheus/client_golang/prometheus"
