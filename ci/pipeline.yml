@@ -40,11 +40,6 @@ jobs:
         - task: build-image
           privileged: true
           file: repository/ci/tasks/build.yml
-        - task: tests
-          privileged: true
-          params: {TARGET: tests}
-          output_mapping: {image: unused}
-          file: repository/ci/tasks/build.yml
       - put: container-image
         inputs: [image, version]
         get_params: {format: oci}
