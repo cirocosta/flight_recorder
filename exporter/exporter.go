@@ -5,12 +5,14 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Exporter struct {
 	ListenAddress string
 	TelemetryPath string
+	Collectors    []prometheus.Collector
 
 	listener net.Listener
 }
@@ -21,6 +23,15 @@ type Exporter struct {
 // This is a blocking method - make sure you either make use of
 // goroutines to not block if needed.
 func (e *Exporter) Listen() (err error) {
+	for _, collector := range e.Collectors {
+		err = prometheus.Register(collector)
+		if err != nil {
+			err = errors.Wrapf(err,
+				"failed to register collector")
+			return
+		}
+	}
+
 	http.Handle(e.TelemetryPath, promhttp.Handler())
 
 	e.listener, err = net.Listen("tcp", e.ListenAddress)

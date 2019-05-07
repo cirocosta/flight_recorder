@@ -24,3 +24,14 @@ func New(connStr string) (db *Db, err error) {
 
 	return
 }
+
+func (d *Db) Close() (err error) {
+	err = d.db.Close()
+	if err != nil {
+		err = errors.Wrapf(err,
+			"failed to close database")
+		return
+	}
+
+	return
+}

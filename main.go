@@ -5,10 +5,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/cirocosta/concourse_db_exporter/collectors"
 	"github.com/cirocosta/concourse_db_exporter/db"
 	"github.com/cirocosta/concourse_db_exporter/exporter"
 	"github.com/concourse/flag"
 	"github.com/jessevdk/go-flags"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (
@@ -21,13 +23,13 @@ var (
 	}{}
 )
 
-func handleSignals(exp *exporter.Exporter) {
+func handleSignals(exp *exporter.Exporter, database *db.Db) {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGTERM, syscall.SIGINT)
 	<-sigChan
 
 	exp.Stop()
-
+	database.Close()
 }
 
 func main() {
@@ -36,17 +38,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	exp := exporter.Exporter{
-		TelemetryPath: config.TelemetryPath,
-		ListenAddress: config.ListenAddress,
-	}
-
-	go handleSignals(&exp)
-
-	_, err = db.New(config.Postgres.ConnectionString())
+	database, err := db.New(config.Postgres.ConnectionString())
 	if err != nil {
 		panic(err)
 	}
+
+	exp := exporter.Exporter{
+		TelemetryPath: config.TelemetryPath,
+		ListenAddress: config.ListenAddress,
+		Collectors: []prometheus.Collector{
+			&collectors.WorkersByState{Db: database},
+		},
+	}
+
+	go handleSignals(&exp, database)
 
 	err = exp.Listen()
 	if err != nil {
