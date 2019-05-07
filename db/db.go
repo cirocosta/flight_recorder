@@ -35,3 +35,44 @@ func (d *Db) Close() (err error) {
 
 	return
 }
+
+type Datapoint struct {
+	LabelSet []string
+	Value    float64
+}
+
+func (d *Db) query(query string, labelCount int) (res []Datapoint, err error) {
+	rows, err := d.db.Query(query)
+	if err != nil {
+		err = errors.Wrapf(err,
+			"failed to retrieve workers by state")
+		return
+	}
+
+	var (
+		count           float64 = 0
+		scanningTargets         = []interface{}{&count}
+		labelSet                = make([]string, labelCount)
+	)
+
+	for i := 0; i < labelCount; i++ {
+		scanningTargets = append(scanningTargets, &labelSet[i])
+	}
+
+	for rows.Next() {
+		err = rows.Scan(scanningTargets...)
+		if err != nil {
+			err = errors.Wrapf(err,
+				"failed to interpret workers by state row")
+			return
+		}
+
+		dp := Datapoint{Value: count}
+		dp.LabelSet = make([]string, labelCount)
+		copy(dp.LabelSet, labelSet)
+
+		res = append(res, dp)
+	}
+
+	return
+}

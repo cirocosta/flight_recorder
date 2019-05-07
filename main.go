@@ -55,6 +55,7 @@ func main() {
 		ListenAddress: config.ListenAddress,
 		Collectors: []prometheus.Collector{
 			&collectors.WorkersByState{Db: database},
+			&collectors.PipelinesPerTeam{Db: database},
 		},
 	}
 

@@ -23,17 +23,17 @@ func (w *WorkersByState) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (w *WorkersByState) Collect(ch chan<- prometheus.Metric) {
-	workersByState, err := w.Db.WorkersByState()
+	datapoints, err := w.Db.WorkersByState()
 	if err != nil {
 		panic(err)
 	}
 
-	for state, count := range workersByState {
+	for _, datapoint := range datapoints {
 		ch <- prometheus.MustNewConstMetric(
 			workersByStateDescription,
 			prometheus.UntypedValue,
-			count,
-			state,
+			datapoint.Value,
+			datapoint.LabelSet...,
 		)
 	}
 }

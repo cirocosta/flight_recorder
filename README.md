@@ -1,0 +1,3 @@
+- [ ] # of teams
+- [ ] # pipelines
+- [ ] # of unique resource configs
