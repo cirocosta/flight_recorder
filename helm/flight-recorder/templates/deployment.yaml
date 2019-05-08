@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "flight-recorder.fullname" . }}
+  name: {{ include "flight_recorder.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "flight-recorder.name" . }}
-    helm.sh/chart: {{ include "flight-recorder.chart" . }}
+    app.kubernetes.io/name: {{ include "flight_recorder.name" . }}
+    helm.sh/chart: {{ include "flight_recorder.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "flight-recorder.name" . }}
+      app.kubernetes.io/name: {{ include "flight_recorder.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "flight-recorder.name" . }}
+        app.kubernetes.io/name: {{ include "flight_recorder.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
@@ -26,6 +26,53 @@ spec:
           args:
            - --address=:80
            - --path=/
+          env:
+            {{- if .Values.flight_recorder.postgres.host }}
+            - name: FR_POSTGRES_HOST
+              value: {{ .Values.flight_recorder.postgres.host | quote }}
+            {{- end }}
+            {{- if .Values.flight_recorder.postgres.port }}
+            - name: FR_POSTGRES_PORT
+              value: {{ .Values.flight_recorder.postgres.port | quote }}
+            {{- end }}
+            {{- if .Values.flight_recorder.postgres.socket }}
+            - name: FR_POSTGRES_SOCKET
+              value: {{ .Values.flight_recorder.postgres.socket | quote }}
+            {{- end }}
+            - name: FR_POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "flight_recorder.fullname" . }}
+                  key: postgresql-user
+            - name: FR_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "flight_recorder.fullname" . }}
+                  key: postgresql-password
+            {{- if .Values.flight_recorder.postgres.sslmode }}
+            - name: FR_POSTGRES_SSLMODE
+              value: {{ .Values.flight_recorder.postgres.sslmode | quote }}
+            {{- end }}
+            {{- if .Values.secrets.postgresCaCert }}
+            - name: FR_POSTGRES_CA_CERT
+              value: "{{ .Values.secretsPath }}/ca.cert"
+            {{- end }}
+            {{- if .Values.secrets.postgresClientCert }}
+            - name: FR_POSTGRES_CLIENT_CERT
+              value: "{{ .Values.secretsPath }}/client.cert"
+            {{- end }}
+            {{- if .Values.secrets.postgresClientKey }}
+            - name: FR_POSTGRES_CLIENT_KEY
+              value: "{{ .Values.secretsPath }}/client.key"
+            {{- end }}
+            {{- if .Values.flight_recorder.postgres.connectTimeout }}
+            - name: FR_POSTGRES_CONNECT_TIMEOUT
+              value: {{ .Values.flight_recorder.postgres.connectTimeout | quote }}
+            {{- end }}
+            {{- if .Values.flight_recorder.postgres.database }}
+            - name: FR_POSTGRES_DATABASE
+              value: {{ .Values.flight_recorder.postgres.database | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 80
@@ -38,14 +85,23 @@ spec:
             httpGet:
               path: /
               port: http
-          volumes:
-            - name: kmsg-device
-              hostPath:
-                path: /dev/kmsg
-          securityContext:
-            privileged: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: postgres-secrets
+              mountPath: {{ .Values.secretsPath | quote }}
+      volumes:
+        - name: postgres-secrets
+          secret:
+            secretName: {{ include "flight_recorder.fullname" . }}
+            defaultMode: 0400
+            items:
+              - key: postgresql-ca-cert
+                path: ca.cert
+              - key: postgresql-client-cert
+                path: client.cert
+              - key: postgresql-client-key
+                path: client.key
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
