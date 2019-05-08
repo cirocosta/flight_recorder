@@ -1,4 +1,11 @@
-- [x] # of teams
-- [x] # pipelines
-- [x] # of resources per pipeline
-- [x] # of jobs per pipeline
+# flight_recorder
+
+
+| name | description |
+| ---- | ----------- |
+| flight_recorder_builds | Number of builds |
+| flight_recorder_containers | Number of containers |
+| flight_recorder_pipelines | Number of pipelines set |
+| flight_recorder_resources | Number of resources configured |
+| flight_recorder_teams | Number of teams |
+| flight_recorder_workers | Per-state worker count |

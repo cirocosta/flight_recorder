@@ -99,6 +99,15 @@ func main() {
 				),
 				RetrievalFunc: database.Teams,
 			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_builds",
+					"Number of builds",
+					[]string{"status", "team", "pipeline"},
+					nil,
+				),
+				RetrievalFunc: database.Builds,
+			},
 		},
 	}
 
