@@ -4,9 +4,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// flight_recorder_pipelines{team=""}
-//
-func (d *Db) PipelinesPerTeam() (datapoints []Datapoint, err error) {
+func (d *Db) Pipelines() (datapoints []Datapoint, err error) {
 	datapoints, err = d.query(`
 		SELECT
 			count(*), teams.name AS team_name

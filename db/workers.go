@@ -4,7 +4,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (d *Db) WorkersByState() (datapoints []Datapoint, err error) {
+func (d *Db) Workers() (datapoints []Datapoint, err error) {
 	datapoints, err = d.query(`
 		SELECT
 			count(*), state

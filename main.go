@@ -54,11 +54,51 @@ func main() {
 		TelemetryPath: config.TelemetryPath,
 		ListenAddress: config.ListenAddress,
 		Collectors: []prometheus.Collector{
-			&collectors.WorkersByState{Db: database},
-			&collectors.PipelinesPerTeam{Db: database},
-			&collectors.Resources{Db: database},
-			&collectors.Teams{Db: database},
-			&collectors.Containers{Db: database},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_pipelines",
+					"Number of pipelines set",
+					[]string{"team"},
+					nil,
+				),
+				RetrievalFunc: database.Pipelines,
+			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_containers",
+					"Number of containers",
+					[]string{"type", "worker", "state"},
+					nil,
+				),
+				RetrievalFunc: database.Containers,
+			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_workers",
+					"Per-state worker count",
+					[]string{"state"},
+					nil,
+				),
+				RetrievalFunc: database.Workers,
+			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_resources",
+					"Number of resources configured",
+					[]string{"pipeline", "team"},
+					nil,
+				),
+				RetrievalFunc: database.Resources,
+			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_teams",
+					"Number of teams",
+					nil,
+					nil,
+				),
+				RetrievalFunc: database.Teams,
+			},
 		},
 	}
 
