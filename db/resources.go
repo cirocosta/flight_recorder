@@ -4,8 +4,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-// flight_recorder_resources{pipeline="",team=""}
-//
 func (d *Db) Resources() (datapoints []Datapoint, err error) {
 	datapoints, err = d.query(`
 		SELECT 
@@ -23,7 +21,7 @@ func (d *Db) Resources() (datapoints []Datapoint, err error) {
 	`, 2)
 	if err != nil {
 		err = errors.Wrapf(err,
-			"failed to pipelines by team")
+			"failed to retrieve pipelines")
 		return
 	}
 

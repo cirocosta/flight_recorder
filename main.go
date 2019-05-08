@@ -58,6 +58,7 @@ func main() {
 			&collectors.PipelinesPerTeam{Db: database},
 			&collectors.Resources{Db: database},
 			&collectors.Teams{Db: database},
+			&collectors.Containers{Db: database},
 		},
 	}
 
