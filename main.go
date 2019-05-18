@@ -108,6 +108,15 @@ func main() {
 				),
 				RetrievalFunc: database.Builds,
 			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_pg_table_stat",
+					"PostgreSQL user table statistics",
+					[]string{"statistic", "table"},
+					nil,
+				),
+				RetrievalFunc: database.TableStat,
+			},
 		},
 	}
 

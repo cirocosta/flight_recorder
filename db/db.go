@@ -45,7 +45,7 @@ func (d *Db) query(query string, labelCount int) (res []Datapoint, err error) {
 	rows, err := d.db.Query(query)
 	if err != nil {
 		err = errors.Wrapf(err,
-			"failed to retrieve workers by state")
+			"failed to execute query")
 		return
 	}
 
@@ -63,7 +63,7 @@ func (d *Db) query(query string, labelCount int) (res []Datapoint, err error) {
 		err = rows.Scan(scanningTargets...)
 		if err != nil {
 			err = errors.Wrapf(err,
-				"failed to interpret workers by state row")
+				"failed to scan query row")
 			return
 		}
 
