@@ -117,6 +117,15 @@ func main() {
 				),
 				RetrievalFunc: database.TableStat,
 			},
+			&collectors.Collector{
+				Description: prometheus.NewDesc(
+					"flight_recorder_pg_table_sizes_bytes",
+					"PostgreSQL table sizes",
+					[]string{"table"},
+					nil,
+				),
+				RetrievalFunc: database.TableSizes,
+			},
 		},
 	}
 

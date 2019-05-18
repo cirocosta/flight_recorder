@@ -6,6 +6,24 @@ import (
 	"github.com/pkg/errors"
 )
 
+func (d *Db) TableSizes() (datapoints []Datapoint, err error) {
+	datapoints, err = d.query(`
+		SELECT
+			pg_total_relation_size(relid) AS size,
+			relname
+		FROM 
+			pg_catalog.pg_statio_user_tables;
+	`, 1)
+
+	if err != nil {
+		err = errors.Wrapf(err,
+			"failed to retrieve tables sizes")
+		return
+	}
+
+	return
+}
+
 var measurements = []string{
 	"seq_scan",
 	"seq_tup_read",

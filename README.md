@@ -10,3 +10,4 @@
 | flight_recorder_teams | Number of teams |
 | flight_recorder_workers | Per-state worker count |
 | flight_recorder_pg_table_stat | PostgreSQL user table statistics |
+| flight_recorder_pg_table_sizes_bytes | PostgreSQL table sizes |
