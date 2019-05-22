@@ -34,11 +34,12 @@ secrets:
 secretsPath: /var/run/postgres-secrets
 
 flight_recorder:
+  disable: []
   postgres:
     host:
     port:
     socket:
     sslmode: disable
-    connectTimeout:
+    connectTimeout: 30s
     database:
 

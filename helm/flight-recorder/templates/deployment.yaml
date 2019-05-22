@@ -26,6 +26,9 @@ spec:
           args:
            - --address=:80
            - --path=/
+           {{- range .Values.flight_recorder.disable }}
+           - --disable={{.}}
+           {{- end }}
           env:
             {{- if .Values.flight_recorder.postgres.host }}
             - name: FR_POSTGRES_HOST
